@@ -174,8 +174,11 @@
 
             // --- CLICK HANDLER FOR ALL LEVELS (Unlocked & Locked) ---
             selectLevel: function(id) {
-                this.selectedLevel = LEVELS.find(l => l.id === id);
-                this.switchTab('level');
+                const found = LEVELS.find(l => l.id === id);
+                if (found) {
+                    this.selectedLevel = found;
+                    this.switchTab('level');
+                }
             },
 
             toggleTask: function(idx) {
@@ -330,9 +333,26 @@
                     return 'text-orange-400 bg-orange-400/10';
                 };
 
+                // Navigation Buttons (Prev/Next)
+                const prevBtn = l.id > 1 
+                    ? `<button onclick="app.selectLevel(${l.id - 1})" class="p-2 rounded bg-slate-700 hover:bg-slate-600 text-white transition-colors"><i data-lucide="chevron-left" class="w-5 h-5"></i></button>` 
+                    : `<div class="w-9"></div>`; // Spacer
+                
+                const nextBtn = l.id < 50 
+                    ? `<button onclick="app.selectLevel(${l.id + 1})" class="p-2 rounded bg-slate-700 hover:bg-slate-600 text-white transition-colors"><i data-lucide="chevron-right" class="w-5 h-5"></i></button>` 
+                    : `<div class="w-9"></div>`; // Spacer
+
                 container.innerHTML = `
                     <div class="max-w-4xl mx-auto animate-slide-in">
-                        <button onclick="app.switchTab('dashboard')" class="text-slate-400 hover:text-white mb-4 flex items-center gap-2 text-sm"><i data-lucide="arrow-left" class="w-4 h-4"></i> Back</button>
+                        <div class="flex justify-between items-center mb-4">
+                            <button onclick="app.switchTab('dashboard')" class="text-slate-400 hover:text-white flex items-center gap-2 text-sm">
+                                <i data-lucide="arrow-left" class="w-4 h-4"></i> Back
+                            </button>
+                            <div class="flex gap-2">
+                                ${prevBtn}
+                                ${nextBtn}
+                            </div>
+                        </div>
                         
                         <div class="bg-slate-800 border border-slate-700 rounded-2xl overflow-hidden">
                             <div class="p-8 border-b border-slate-700">
